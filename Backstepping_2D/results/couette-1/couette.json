@@ -1,0 +1,88 @@
+{
+    "general": {
+        "case_name": "couette",
+        "end_time": 10.0,
+        "save_path": "./results",
+        "save_dt": 10.0
+    },
+    "domain": {
+        "x": {
+            "cells": 64,
+            "range": [
+                0.0,
+                1.0
+            ]
+        },
+        "y": {
+            "cells": 64,
+            "range": [
+                0.0,
+                1.0
+            ]
+        },
+        "z": {
+            "cells": 1,
+            "range": [
+                0.0,
+                1.0
+            ]
+        }
+    },
+    "boundary_condition": {
+        "types": {
+            "east": "neumann",
+            "west": "dirichlet",
+            "north": "wall",
+            "south": "wall",
+            "top": "inactive",
+            "bottom": "inactive"
+        },
+        "dirichlet_functions": {
+            "west": {
+                "rho": 1.0,
+                "u": 0.5,
+                "v": 0.0,
+                "w": 0.0,
+                "p": 1.0
+            }
+        },
+        "wall_velocity_functions": {
+            "north": {
+                "u": 0.0,
+                "w": 0.0
+            },
+            "south": {
+                "u": 0.0,
+                "w": 0.0
+            }
+        }
+    },
+    "initial_condition": {
+        "rho": 1.0,
+        "u": 0.0,
+        "v": 0.0,
+        "w": 0.0,
+        "p": 1.0
+    },
+    "forcings": {
+        "temperature_target": 1.0
+    },
+    "material_properties": {
+        "type": "IdealGas",
+        "dynamic_viscosity": 0.1,
+        "bulk_viscosity": 0.0,
+        "thermal_conductivity": 0.0,
+        "specific_heat_ratio": 1.4,
+        "specific_gas_constant": 1.0
+    },
+    "nondimensionalization_parameters": {
+        "density_reference": 1.0,
+        "length_reference": 1.0,
+        "velocity_reference": 1.0,
+        "temperature_reference": 1.0
+    },
+    "restart": {
+        "flag": false,
+        "file_path": "./"
+    }
+}

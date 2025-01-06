@@ -1,0 +1,141 @@
+*------------------------------------------------------------------------------*
+*                                                                              *
+*                                                                              *
+*          _     _    __  __        _____  _      _   _  ___  ____   ____      *
+*         | |   / \   \ \/ /       |  ___|| |    | | | ||_ _||  _ \ / ___|     *
+*      _  | |  / _ \   \  /  _____ | |_   | |    | | | | | | | | | |\___ \     *
+*     | |_| | / ___ \  /  \ |_____||  _|  | |___ | |_| | | | | |_| | ___) |    *
+*      \___/ /_/   \_\/_/\_\       |_|    |_____| \___/ |___||____/ |____/     *
+*                                                                              *
+*                                By BB - ML@AER                                *
+*                                                                              *
+*------------------------------------------------------------------------------*
+* JAX-FLUIDS -                                                                 *
+*                                                                              *
+* A fully-differentiable CFD solver for compressible two-phase flows.          *
+* Copyright (C) 2022  Deniz A. Bezgin, Aaron B. Buhendwa, Nikolaus A. Adams    *
+*                                                                              *
+* This program is free software: you can redistribute it and/or modify         *
+* it under the terms of the GNU General Public License as published by         *
+* the Free Software Foundation, either version 3 of the License, or            *
+* (at your option) any later version.                                          *
+*                                                                              *
+* This program is distributed in the hope that it will be useful,              *
+* but WITHOUT ANY WARRANTY; without even the implied warranty of               *
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                *
+* GNU General Public License for more details.                                 *
+*                                                                              *
+* You should have received a copy of the GNU General Public License            *
+* along with this program.  If not, see <https://www.gnu.org/licenses/>.       *
+*                                                                              *
+*------------------------------------------------------------------------------*
+*                                                                              *
+* CONTACT                                                                      *
+*                                                                              *
+* deniz.bezgin@tum.de // aaron.buhendwa@tum.de // nikolaus.adams@tum.de        *
+*                                                                              *
+*------------------------------------------------------------------------------*
+*                                                                              *
+* Munich, April 15th, 2022                                                     *
+*                                                                              *
+*------------------------------------------------------------------------------*
+*                                                                              *
+*                                                                              *
+*                               NUMERICAL SETUP                                *
+*                                                                              *
+*    CONSERVATIVES                                                             *
+*        HALO CELLS                   :    5                                   *
+*        TIME INTEGRATION                                                      *
+*          INTEGRATOR                 :    RK3                                 *
+*          CFL                        :    0.8                                 *
+*        CONVECTIVE FLUXES                                                     *
+*          CONVECTIVE SOLVER          :    GODUNOV                             *
+*          RIEMANN SOLVER             :    HLLC                                *
+*          SIGNAL SPEED               :    EINFELDT                            *
+*          SPATIAL RECONSTRUCTOR      :    WENO5-JS                            *
+*          IS SAFE RECONSTRUCTION     :    True                                *
+*          RECONSTRUCTION VAR         :    PRIMITIVE                           *
+*        DISSIPATIVE FLUXES                                                    *
+*          RECONSTRUCTION STENCIL     :    R4                                  *
+*          DERIVATIVE STENCIL CENTER  :    DC4                                 *
+*          DERIVATIVE STENCIL FACE    :    DF4                                 *
+*                                                                              *
+*    ACTIVE PHYSICS                                                            *
+*        IS CONVECTIVE FLUX           :    True                                *
+*        IS VISCOUS FLUX              :    False                               *
+*        IS HEAT FLUX                 :    False                               *
+*        IS VOLUME FORCE              :    False                               *
+*        IS SURFACE TENSION           :    False                               *
+*                                                                              *
+*    ACTIVE FORCINGS                                                           *
+*        IS MASS FLOW FORCING         :    False                               *
+*        IS TEMPERATURE FORCING       :    False                               *
+*        IS TURB HIT FORCING          :    False                               *
+*                                                                              *
+*    OUTPUT                                                                    *
+*        IS DOUBLE PRECISION COMPUTE  :    False                               *
+*        IS DOUBLE PRECISION OUTPUT   :    False                               *
+*        DERIVATIVE STENCIL           :    DC4                                 *
+*        QUANTITIES                                                            *
+*          PRIMES                     :    ['density', 'velocityX', 'velocityY', 'pressure', 'temperature']*
+*          LEVELSET                   :    ['mask_real', 'levelset']           *
+*          MISCELLANEOUS              :    ['schlieren', 'mach_number']        *
+*        LOGGING                      :    INFO                                *
+*        IS XDMF                      :    False                               *
+*                                                                              *
+*                                                                              *
+*------------------------------------------------------------------------------*
+*                                                                              *
+*                                  CASE SETUP                                  *
+*                                                                              *
+*    GENERAL                                                                   *
+*        CASE NAME                    :    bowshock                            *
+*        END TIME                     :    10.0                                *
+*        SAVE PATH                    :    ./results                           *
+*        SAVE DT                      :    10.0                                *
+*                                                                              *
+*    DOMAIN                                                                    *
+*        X                                                                     *
+*          CELLS                      :    64                                  *
+*          RANGE                      :    [-2.0, 2.0]                         *
+*        Y                                                                     *
+*          CELLS                      :    64                                  *
+*          RANGE                      :    [-2.0, 2.0]                         *
+*        Z                                                                     *
+*          CELLS                      :    1                                   *
+*          RANGE                      :    [0.0, 1.0]                          *
+*                                                                              *
+*    BOUNDARY CONDITION                                                        *
+*        TYPES                                                                 *
+*          EAST                       :    neumann                             *
+*          WEST                       :    neumann                             *
+*          NORTH                      :    wall                                *
+*          SOUTH                      :    wall                                *
+*          TOP                        :    inactive                            *
+*          BOTTOM                     :    inactive                            *
+*        WALL VELOCITY FUNCTIONS                                               *
+*          NORTH                      :    {'U': 0.5, 'W': 0.0}                *
+*          SOUTH                      :    {'U': 0.5, 'W': 0.0}                *
+*                                                                              *
+*    INITIAL CONDITION                                                         *
+*        RHO                          :    1.0                                 *
+*        U                            :    0.0                                 *
+*        V                            :    0.0                                 *
+*        W                            :    0.0                                 *
+*        P                            :    1.0                                 *
+*                                                                              *
+*    MATERIAL PROPERTIES                                                       *
+*        TYPE                         :    IdealGas                            *
+*        DYNAMIC VISCOSITY            :    0.0001                              *
+*        BULK VISCOSITY               :    0.0                                 *
+*        THERMAL CONDUCTIVITY         :    0.0                                 *
+*        SPECIFIC HEAT RATIO          :    1.4                                 *
+*        SPECIFIC GAS CONSTANT        :    0.7142857142857143                  *
+*                                                                              *
+*    NONDIMENSIONALIZATION PARAMETERS                                          *
+*        DENSITY REFERENCE            :    1.0                                 *
+*        LENGTH REFERENCE             :    1.0                                 *
+*        VELOCITY REFERENCE           :    1.0                                 *
+*        TEMPERATURE REFERENCE        :    1.0                                 *
+*                                                                              *
+*                                                                              *

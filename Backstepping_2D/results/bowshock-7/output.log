@@ -114,7 +114,7 @@
 *          TOP                        :    inactive                            *
 *          BOTTOM                     :    inactive                            *
 *        DIRICHLET FUNCTIONS                                                   *
-*          WEST                       :    {'RHO': 1.0, 'U': 0.5, 'V': 0.0, 'W': 0.0, 'P': 1.0}*
+*          WEST                       :    {'RHO': 1.0, 'U': 'lambda x, y: jnp.where(x < 0, 1, 0) * 0.5 + jnp.where(x >= 0, 1, 0) * 0.5', 'V': 0.0, 'W': 0.0, 'P': 1.0}*
 *                                                                              *
 *    INITIAL CONDITION                                                         *
 *        RHO                          :    1.0                                 *

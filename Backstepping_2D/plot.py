@@ -7,7 +7,7 @@ def plot_moving_average(csv_file, column_name, window_size):
         if column_name not in data.columns:
             raise ValueError(f"Column '{column_name}' not found in the CSV file.")
         
-        column_data = data[column_name][:3000]
+        column_data = data[column_name]
         moving_avg = column_data.rolling(window=window_size).mean()
         
         plt.figure(figsize=(12, 6))
@@ -25,7 +25,7 @@ def plot_moving_average(csv_file, column_name, window_size):
     except Exception as e:
         print(f"An error occurred: {e}")
 
-csv_file = 'data_5000.csv'
-column_name = 'action'
-window_size = 100
+csv_file = 'sac_data_6.csv'
+column_name = 'rewards'
+window_size = 50
 plot_moving_average(csv_file, column_name, window_size)

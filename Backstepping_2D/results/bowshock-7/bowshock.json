@@ -40,7 +40,7 @@
         "dirichlet_functions": {
             "west": {
                 "rho": 1.0,
-                "u": 0.5,
+                "u": "lambda x, y: jnp.where(x < 0, 1, 0) * 0.5 + jnp.where(x >= 0, 1, 0) * 0.5",
                 "v": 0.0,
                 "w": 0.0,
                 "p": 1.0
